@@ -27,109 +27,94 @@ struct ContentView: View {
     @State private var isGameActive = false
     @State private var reStart = false
     
-    @State private var randomAnimals = ["penguin" ,"whale" ,"panda" , "narwhal", "cow", "goat" , "hippo","bear","owl","crocodile" ,"parrot","snake","owl" ,"chicken","giraffe","frog", "chick", "pig" , "duck", "zebra"].shuffled()
+    @State private var randomAnimals = ["walrus" ,"sloth", "rhino","rabbit", "moose", "monkey", "horse", "gorilla", "buffalo", "elephant", "dog", "penguin","whale" ,"panda" , "narwhal", "cow", "goat" , "hippo","bear" ,"crocodile" ,"parrot","snake","owl" ,"chicken","giraffe","frog", "chick", "pig" , "duck", "zebra"].shuffled()
     
+    @State private var i = Int.random(in: 0...30)
     @State private var showingAlert = false
     var body: some View {
-                ZStack{
-                    LinearGradient(colors: [.orange , .yellow, .green ], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
-                    
-                    Image(randomAnimals[0])
-                        .resizable()
-                        .scaledToFit()
-                        .ignoresSafeArea()
-                    
-                    VStack{
-                        if isGameActive{
-                            Image(randomAnimals[0])
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 120, height: 120)
-                                .transition(.scale)
-                            
-                            Text("Game Started! Good luck!").bold().padding().background(Color.white.opacity(0.5)).border(.white).clipShape(.capsule)
-                        }
+                    ZStack{
+                        LinearGradient(colors: [.orange , .yellow, .green ], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
                         
-                        if !isGameActive {
-                            ZStack {
-                                VStack{
-                                    VStack{
-                                        Text("Select your multiplication table!")
-                                        Stepper("Table of \(selectedTable) Selected", value: $selectedTable, in: 2...12)
-                                    }.bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
-                                    
-                                    VStack{
-                                        Text("How many questions would you like to solve?")
-                                        Stepper("\(questionCount) Many Questions!", value: $questionCount, in: 2...25)
-                                    }.bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
-                                }
-                            }
-                            
-                            Button("Start game !") {
-                                withAnimation(){
-                                    isGameActive.toggle()
-                                }
-                            }
-                            .bold()
-                            .padding()
-                            .foregroundStyle(.white)
-                            .background(Color.green)
-                            .clipShape(.capsule)
-                        }
+                        Image(randomAnimals[i])
+                            .resizable()
+                            .scaledToFit()
+                            .ignoresSafeArea()
                         
-                        
-                        if isGameActive {
-                            VStack{
-                                HStack{
-                                    Text("\(currentIndex )/\(questionCount)").bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
-                                    
-                                    Text("\(generateQuestion().questions)").bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
-                                }.padding()
+                        VStack{
+                            if isGameActive{
+                                Image(randomAnimals[i])
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 120, height: 120)
+                                    .transition(.scale)
                                 
-                                ForEach(generateQuestion().answers , id : \.self) {ans in
-                                    
-                                    Button("\(ans)"){
-                                        checkAns(ans)
+                                Text("Game Started! Good luck!").bold().padding().background(Color.white.opacity(0.5)).border(.white).clipShape(.capsule)
+                            }
+                            
+                            if !isGameActive {
+                                    VStack{
+                                        VStack{
+                                            Text("Select your multiplication table!")
+                                            Stepper("Table of \(selectedTable) Selected", value: $selectedTable, in: 2...12)
+                                        }.bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
+                                        
+                                        VStack{
+                                            Text("How many questions would you like to solve?")
+                                            Stepper("\(questionCount) Many Questions!", value: $questionCount, in: 2...25)
+                                        }.bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
+                                    }
+                
+                                
+                                Button("Start game !") {
+                                    withAnimation(){
+                                        isGameActive.toggle()
                                     }
                                 }
                                 .bold()
                                 .padding()
-                                .background(Color.green)
                                 .foregroundStyle(.white)
+                                .background(Color.green)
                                 .clipShape(.capsule)
-                                
-                                Text(feedback)
+                            }
+                            
+                            
+                            if isGameActive {
+                                VStack{
+                                    HStack{
+                                        Text("\(currentIndex )/\(questionCount)").bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
+                                        
+                                        Text("\(generateQuestion().questions)").bold().padding().background(Color.white.opacity(0.7)).border(.white).clipShape(.capsule)
+                                    }.padding()
+                                    
+                                    ForEach(generateQuestion().answers , id : \.self) {ans in
+                                        
+                                        Button("\(ans)"){
+                                            checkAns(ans)
+                                        }
+                                    }
                                     .bold()
                                     .padding()
-                                
-//                                if reStart{
-//                                    Button("Restart!") {
-//                                        isGameActive.toggle()
-//                                        currentIndex = 1
-//                                        feedback = ""
-//                                        reStart = false
-//                                        score = 0
-//                                    }
-//                                    .bold()
-//                                    .padding()
-//                                    .background(Color.red)
-//                                    .foregroundStyle(.white)
-//                                    .clipShape(.capsule)
-//                                        
-//                            }
-                                
-                            }.alert("Game is over. Total score is \(score)/\(questionCount*10)!", isPresented: $showingAlert){
-                                Button("Restart!") {
-                                    isGameActive.toggle()
-                                    currentIndex = 1
-                                    feedback = ""
-                                    reStart = false
-                                    score = 0
+                                    .background(Color.green)
+                                    .foregroundStyle(.white)
+                                    .clipShape(.capsule)
+                                    
+                                    Text(feedback)
+                                        .bold()
+                                        .padding()
+                                    
+                                }.alert("Game is over. \n Your final score is \(score)/\(questionCount*10)!", isPresented: $showingAlert){
+                                    Button("Restart!") {
+                                        isGameActive.toggle()
+                                        currentIndex = 1
+                                        feedback = ""
+                                        reStart = false
+                                        score = 0
+                                        i = Int.random(in: 0...30)
+                                    }
+                                } message: {
+                                    Text("")
                                 }
-                            } message: {
-                                Text("")
                             }
-                        }
                         
             }
         }
@@ -171,9 +156,8 @@ struct ContentView: View {
         }else{
            if ans == (selectedTable * randomNum) {
                score += 10
+               feedback = "Congrats! You score is now \(score)"
            }
-//            feedback = "Game is over. Total score is \(score)/\(questionCount*10)!"
-//            reStart = true
             showingAlert = true
         }
     }
